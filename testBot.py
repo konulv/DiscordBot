@@ -1,6 +1,7 @@
 # url https://discordapp.com/oauth2/authorize?client_id=519864297656942602&scope=bot
 # pip3 install -U git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice] for discord.py update
 # discord documentation https://tinyurl.com/y969aalx
+# async def announcement(date, X, Y, Z):
 
 import pickle
 import asyncio
@@ -94,5 +95,15 @@ async def on_ready():
     await bot.change_presence(activity=game)
     print("Logged in as " + bot.user.name)
 
+
+# background task
+async def list_servers():
+    await bot.wait_until_ready()
+    while True:
+        await bot.get_channel(506515617227079681).send("test")
+        await asyncio.sleep(6)
+
+# running it in the background
+bot.loop.create_task(list_servers())
 
 bot.run(TOKEN)

@@ -93,22 +93,11 @@ async def spam_chat(ctx):
         await asyncio.sleep(1)
 
 
-# background task
-async def list_servers():
-    await bot.wait_until_ready()
-    while not bot.is_closed:
-        print("Current servers: ")
-        for server in bot.guilds:
-            print(server.name)
-        await asyncio.sleep(6)
-
-
 @bot.event
 async def on_ready():
     game = Game("Type !help for cmds")
     await bot.change_presence(activity=game)
     print("Logged in as " + bot.user.name)
 
-# running it in the background
-# client.loop.create_task(list_servers())
+
 bot.run(TOKEN)
