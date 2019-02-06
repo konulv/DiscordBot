@@ -4,12 +4,12 @@
 import pickle
 import asyncio
 import random
-import requests
+
+from discord import Embed
 
 from datetime import datetime
 from discord import Game
 from discord.ext.commands import Bot
-
 
 TOKEN = ""
 with open("tokens.dat", "rb") as file:
@@ -22,9 +22,9 @@ bot = Bot(command_prefix=BOT_PREFIX)
 
 
 @bot.command(name="8ball",
-                description="idk",
-                brief="random insults and stuff",
-                aliases=["eight_ball", "eightball"])
+             description="idk",
+             brief="random insults and stuff",
+             aliases=["eight_ball", "eightball"])
 async def eight_ball(ctx):
     possible_response = [
         "ya're a prick",
@@ -43,16 +43,28 @@ async def eight_ball(ctx):
 
 
 @bot.command(name="annoyDev",
-                aliases=["annoydev"])
+             aliases=["annoydev"])
 async def annoy_dev(ctx):
     myid = "<@234374447413329920>"
     await ctx.send("\*poke* " + myid)
 
 
-@bot.command(pass_context=True)
+@bot.command()
 async def hello(ctx):
     possible_response = "hi"
     await ctx.send(possible_response + ", " + ctx.message.author.mention)
+
+
+@bot.command(name="whereYaGoing")
+async def emoji1(ctx):
+    img = Embed().set_image(url="http://i.imgur.com/fVDH5bN.gif")
+    await ctx.send(embed=img)  #
+
+
+@bot.command(name="niggaWhat")
+async def emoji2(ctx):
+    img = Embed().set_image(url="https://i.imgur.com/22sgHi6.gif")
+    await ctx.send(embed=img)
 
 
 @bot.command()
@@ -70,7 +82,7 @@ async def spam(ctx):
     content = ctx.message.content[6:].lower()
     boolean = content == "true"
     set_spam_status(boolean)
-    await ctx.send("spamming been stopped" if not(get_spam_status()) else "spam continues")
+    await ctx.send("spamming been stopped" if not (get_spam_status()) else "spam continues")
 
 
 def get_spam_status():
@@ -88,8 +100,8 @@ def set_spam_status(boolean):
 async def spam_chat(ctx):
     while get_spam_status():
         time = datetime.today()
-        if time.second % 30 == 0:
-            await ctx.send("30s has passed")
+        if time.second % 5 == 0:
+            await ctx.send("@Konulv#5775")
         await asyncio.sleep(1)
 
 
