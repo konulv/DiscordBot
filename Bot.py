@@ -37,7 +37,8 @@ async def eight_ball(ctx):
         "english motherfucker, do you speak it?",
         "muffin button",
         "say what again",
-        "If your DNA was off by one percentage point you'd be a dolphin"
+        "If your DNA was off by one percentage point you'd be a dolphin",
+        "Hey dragon, wake the fuck up! It's already past noon! Get your shit together!"
     ]
     await ctx.send(random.choice(possible_response))
 
