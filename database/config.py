@@ -1,11 +1,12 @@
 
 class Config:
     def __init__(self, channelID, reminder, timeZone, configID=None):
-        self.errors = []
-        self._channelID = channelID
-        self._reminder = reminder
-        self._timeZone = timeZone
-        self._configID = configID
+        self._errors = ""
+        self.channelID = channelID
+        self.reminder = reminder
+        self.timeZone = timeZone
+        self.configID = configID
+
         self.checkErrors()
 
     @property
@@ -17,7 +18,7 @@ class Config:
         try:
             temp = int(channelID)
         except ValueError:
-            self.errors.append("Channel ID must be a number")
+            self._errors += "Channel ID must be a number,"
             self._channelID = 0
             return
         self._channelID = channelID
@@ -32,7 +33,7 @@ class Config:
         try:
             temp = int(reminder)
         except ValueError:
-            self.errors.append("reminder must be a number") #potentially change
+            self._errors += "reminder must be a number," #potentially change
             self._reminder = 0
             return
         self._reminder = reminder
@@ -47,7 +48,7 @@ class Config:
         try:
             temp = int(timeZone)
         except ValueError:
-            self.errors.append("TimeZone not found") #fiugre out how to do this
+            self._errors += "TimeZone not found," #fiugre out how to do this
             self._timeZone = 0
             return
         self._timeZone = timeZone
@@ -60,15 +61,20 @@ class Config:
     @configID.setter
     def configID(self, configID):
         try:
-            temp = int(configID)
+            if configID != None:
+                temp = int(configID)
         except ValueError:
-            self.errors.append("wrong config ID") #wont work
+            self._errors += "wrong config ID" #wont work
             self._configID = 0
             return
         self._configID = configID
 
     def checkErrors(self):
-        if len(self.errors) == 0:
+        if len(self._errors) == 0:
             return
         else:
-            raise ZeroDivisionError
+            raise ConfigError(self._errors)
+
+
+class ConfigError(Exception):
+    pass
