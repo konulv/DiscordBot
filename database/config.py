@@ -6,6 +6,7 @@ class Config:
         self._reminder = reminder
         self._timeZone = timeZone
         self._configID = configID
+        self.checkErrors()
 
     @property
     def channelID(self):
@@ -16,7 +17,7 @@ class Config:
         try:
             temp = int(channelID)
         except ValueError:
-            self.errors.append(1)
+            self.errors.append("Channel ID must be a number")
             self._channelID = 0
             return
         self._channelID = channelID
@@ -31,7 +32,7 @@ class Config:
         try:
             temp = int(reminder)
         except ValueError:
-            self.errors.append(2)
+            self.errors.append("reminder must be a number") #potentially change
             self._reminder = 0
             return
         self._reminder = reminder
@@ -46,7 +47,7 @@ class Config:
         try:
             temp = int(timeZone)
         except ValueError:
-            self.errors.append(3)
+            self.errors.append("TimeZone not found") #fiugre out how to do this
             self._timeZone = 0
             return
         self._timeZone = timeZone
@@ -61,8 +62,13 @@ class Config:
         try:
             temp = int(configID)
         except ValueError:
-            self.errors.append(4)
+            self.errors.append("wrong config ID") #wont work
             self._configID = 0
             return
         self._configID = configID
 
+    def checkErrors(self):
+        if len(self.errors) == 0:
+            return
+        else:
+            raise ZeroDivisionError
