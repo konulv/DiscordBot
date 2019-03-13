@@ -1,5 +1,11 @@
+import pytz
+import db
+from typing import TYPE_CHECKING
+
 
 class Config:
+    ALL_TIME_ZONES = [x.lower() for x in pytz.common_timezones]
+
     def __init__(self, channelID, reminder, timeZone, configID=None):
         self._errors = ""
         self.channelID = channelID
@@ -8,6 +14,7 @@ class Config:
         self.configID = configID
 
         self.checkErrors()
+
 
     @property
     def channelID(self):
@@ -41,17 +48,16 @@ class Config:
 
     @property
     def timeZone(self):
-        return self._reminder
+        return self._timeZone
 
     @timeZone.setter
     def timeZone(self, timeZone):
-        try:
-            temp = int(timeZone)
-        except ValueError:
-            self._errors += "TimeZone not found," #fiugre out how to do this
+        if timeZone.lower() in Config.ALL_TIME_ZONES:
+            self._timeZone = timeZone
+        else:
+            self._errors += "TimeZone not found,"
             self._timeZone = 0
-            return
-        self._timeZone = timeZone
+
 
 
     @property
@@ -60,13 +66,13 @@ class Config:
 
     @configID.setter
     def configID(self, configID):
-        try:
-            if configID != None:
-                temp = int(configID)
-        except ValueError:
-            self._errors += "wrong config ID" #wont work
-            self._configID = 0
-            return
+        if configID != None:
+            if db.getConfig(configID) != None:
+                self._configID = configID
+            else:
+                self._errors += "wrong config ID"
+                self._configID = 0
+                return
         self._configID = configID
 
     def checkErrors(self):
