@@ -76,7 +76,18 @@ def addEvent(channelID, name, date, time, message="1", repeat=False, mode="D"):
 
 
 def getChannelEvents(ID):
-    data = c.execute("SELECT * FROM event where ")
+    try:
+        config = getConfig(ID)[0]
+    except TypeError:
+        raise EventError("Config hasn't been set up on this channel")
+
+    data = c.execute("SELECT * FROM event, config WHERE event.ConfigID == config.ConfigID AND (:config) == event.ConfigID",
+                     {"config": config}).fetchall()
+    if not data:
+        data = None
+    # TODO to be consistent or not to be. To return a list of events or not.
+    return data
+
 
 
 def _updateEvent(ID, date):
