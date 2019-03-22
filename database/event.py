@@ -1,5 +1,6 @@
 
 class Event:
-    #TODO figure out who imma be using this class
-    def __init__(self, eventID, channelID, name, message):
+
+    #TODO figure out how imma be using this class
+    def __init__(self, channelID, name, message):
         pass

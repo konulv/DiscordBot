@@ -14,8 +14,9 @@ date2 += delta
 print(date1 == date2)
 print(date1)
 print(date2)
-print("ab"
-      "cd")
+
+with open("db.py", "r") as file:
+    print(file.readlines())
 # print(datetime.strptime(timestr, "%H:%M"))
 # print(datetime.strptime(datestr, "%d/%m/%y"))
 # try:
