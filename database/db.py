@@ -42,7 +42,7 @@ def updateConfig(ConfigID, reminder, timeZone):
     pass
 
 
-def addEvent(channelID, name, date, time, message=None, repeat=False, mode="D"):
+def addEvent(channelID, name, date, time, message="1", repeat=False, mode="D"):
     errors = ""
     try:
         configID = getConfig(channelID)[1]
@@ -65,6 +65,15 @@ def addEvent(channelID, name, date, time, message=None, repeat=False, mode="D"):
                "Mode": mode, "Repeate": repeat, "Message": message})
     conn.commit()
 
+
+def getChannelEvents(ID):
+    data = c.execute("SELECT * FROM event where ")
+
+
+def _updateEvent(ID, date):
+    pass
+
+def updateEvent(ID, name, date, time, msg, repeat, mode)
 
 
 # c.execute("""CREATE TABLE config (
