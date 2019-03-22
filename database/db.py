@@ -1,6 +1,7 @@
 import sqlite3
 import pytz
 from datetime import datetime, timedelta
+from event import Event
 
 ALL_TIME_ZONES = [x.lower() for x in pytz.common_timezones]
 
@@ -12,8 +13,13 @@ c = conn.cursor()
 #
 # print(c.execute("SELECT * FROM config WHERE ConfigID == 10").fetchone())
 
+
 def addConfig(channelID, reminder, timeZone):
-    #TODO add a check, only 1 config per channel
+
+    check = c.execute("SELECT * FROM config WHERE (:ID) == ChannelID", {"ID": channelID})
+    if check is not None:
+        raise ConfigError("This channel already has config set up")
+
     errors = ""
     try:
         temp = int(reminder)
@@ -22,6 +28,9 @@ def addConfig(channelID, reminder, timeZone):
 
     if not(timeZone.lower() in ALL_TIME_ZONES):
         errors += f"TimeZone '{timeZone}' not found"
+    else:
+        # in case time zone is valid but cases are wrong, e.g. UtC but i need UTC
+        timeZone = pytz.common_timezones[ALL_TIME_ZONES.index(timeZone.lower())]
 
     if len(errors) != 0:
         raise ConfigError(errors)
@@ -45,7 +54,7 @@ def updateConfig(ConfigID, reminder, timeZone):
 def addEvent(channelID, name, date, time, message=None, repeat=False, mode="D"):
     errors = ""
     try:
-        configID = getConfig(channelID)[1]
+        configID = getConfig(channelID)[0]
     except TypeError:
         raise EventError("Config hasn't been set up on this channel")
 
@@ -59,13 +68,18 @@ def addEvent(channelID, name, date, time, message=None, repeat=False, mode="D"):
     except ValueError:
         errors += f"Date '{time}' is invalid, check if its in a correct format HH:MM"
 
-    c.execute("INSERT into event(configID, Name, Date, Time, Mode, Repeat, Message) "
-              "values (:configID, :Name, :Date, :Time, :Mode, :Repeat, :Message)",
+    c.execute("INSERT into event(configID, Name, Date, Time, Message, Repeat, Mode) "
+              "values (:configID, :Name, :Date, :Time, :Message, :Repeat, :Mode)",
               {"channelID": configID, "Name": name, "Date": date, "Time": time,
-               "Mode": mode, "Repeate": repeat, "Message": message})
+               "Mode": mode, "Repeat": repeat, "Message": message})
     conn.commit()
 
 
+def getEvent(ID):
+    eventData = c.execute("SELECT * FROM event WHERE (:ID) == EventID", {"ID": ID}).fetchone()
+    channelID = c.execute("SELECT ChannelID FROM config WHERE (:ID) == ConfigID", {"ID": eventData[1]}).fetchone()
+    event = Event(channelID, eventData[2], eventData[5])
+    return event
 
 # c.execute("""CREATE TABLE config (
 #            ConfigID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,9 +101,9 @@ def addEvent(channelID, name, date, time, message=None, repeat=False, mode="D"):
 #            Name TEXT,
 #            Date TEXT,
 #            Time TEXT,
-#            Mode TEXT,
-#            Repeat TEXT,
 #            Message TEXT,
+#            Repeat TEXT,
+#            Mode TEXT,
 #            FOREIGN KEY(ConfigID) REFERENCES config(ConfigID))""")
 
 
