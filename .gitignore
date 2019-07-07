@@ -1,1 +1,3 @@
 tokens.dat
+__pycache__/
+*.pyc
