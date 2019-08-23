@@ -3,13 +3,14 @@
 
 import pickle
 import asyncio
-import random
+import requests
+
 
 from discord import Embed
 
 from datetime import datetime
 from discord import Game
-from discord.ext.commands import Bot
+from discord.ext.commands import Bot, Cog
 
 TOKEN = ""
 with open("tokens.dat", "rb") as file:
@@ -19,41 +20,6 @@ BOT_PREFIX = ("?", "!")
 spamBool = True
 
 bot = Bot(command_prefix=BOT_PREFIX)
-
-
-@bot.command(name="8ball",
-             description="idk",
-             brief="random insults and stuff",
-             aliases=["eight_ball", "eightball"])
-async def eight_ball(ctx):
-    possible_response = [
-        "ya're a prick",
-        "i like trains",
-        "fly you fools",
-        "Boi",
-        "Ah, the sound of the majestic space duck...",
-        "try me bitch",
-        "free real estate",
-        "english motherfucker, do you speak it?",
-        "muffin button",
-        "say what again",
-        "If your DNA was off by one percentage point you'd be a dolphin",
-        "Hey dragon, wake the fuck up! It's already past noon! Get your shit together!"
-    ]
-    await ctx.send(random.choice(possible_response))
-
-
-@bot.command(name="annoyDev",
-             aliases=["annoydev"])
-async def annoy_dev(ctx):
-    myid = "<@234374447413329920>"
-    await ctx.send("\*poke* " + myid)
-
-
-@bot.command()
-async def hello(ctx):
-    possible_response = "hi"
-    await ctx.send(possible_response + ", " + ctx.message.author.mention)
 
 
 @bot.command(name="whereYaGoing")
@@ -112,5 +78,6 @@ async def on_ready():
     await bot.change_presence(activity=game)
     print("Logged in as " + bot.user.name)
 
+bot.load_extension("general")
 
 bot.run(TOKEN)

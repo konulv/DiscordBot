@@ -1,3 +1,4 @@
 tokens.dat
 __pycache__/
 *.pyc
+database/database.db

@@ -17,22 +17,23 @@ c = conn.cursor()
 def addConfig(channelID, reminder, timeZone):
 
     check = c.execute("SELECT * FROM config WHERE (:ID) == ChannelID", {"ID": channelID})
-    if check is not None:
+    if not check:
         raise ConfigError("This channel already has config set up")
 
     errors = ""
     try:
         temp = int(reminder)
     except ValueError:
-        errors += f"reminder '{reminder}' must be a number,"
+        errors += f"reminder '{reminder}' must be a number\n"
 
     if not(timeZone.lower() in ALL_TIME_ZONES):
         errors += f"TimeZone '{timeZone}' not found"
     else:
         # in case time zone is valid but cases are wrong, e.g. UtC but i need UTC
+        # TODO wtf is this?
         timeZone = pytz.common_timezones[ALL_TIME_ZONES.index(timeZone.lower())]
 
-    if len(errors) != 0:
+    if not errors:
         raise ConfigError(errors)
 
     c.execute("INSERT into config(ChannelID, Reminder, TimeZone) values (:channelID, :reminder, :timeZone)",
@@ -40,6 +41,8 @@ def addConfig(channelID, reminder, timeZone):
     conn.commit()
 
 
+# get config either by providing config ID or channel ID
+# returns None if there is no config
 def getConfig(ID):
     data = c.execute("SELECT * FROM config WHERE (:ID) == ConfigID", {"ID": ID}).fetchone()
     if data is None:
@@ -47,6 +50,7 @@ def getConfig(ID):
     return data
 
 
+# TODO finish this
 def updateConfig(ConfigID, reminder, timeZone):
     pass
 
@@ -61,12 +65,16 @@ def addEvent(channelID, name, date, time, message="1", repeat=False, mode="D"):
     try:
         datetime.strptime(date, "%d/%m/%y")
     except ValueError:
-        errors += f"Date '{date}' is invalid, check if its in a correct format DD/MM/YY"
+        errors += f"Date '{date}' is invalid, check if its in a correct format DD/MM\n"
 
     try:
         datetime.strptime(time, "%H:%M")
     except ValueError:
         errors += f"Date '{time}' is invalid, check if its in a correct format HH:MM"
+
+    if not errors:
+        raise EventError(errors)
+
 
     c.execute("INSERT into event(configID, Name, Date, Time, Message, Repeat, Mode) "
               "values (:configID, :Name, :Date, :Time, :Message, :Repeat, :Mode)",
@@ -89,7 +97,7 @@ def getChannelEvents(ID):
     return data
 
 
-
+# huh?
 def _updateEvent(ID, date):
     pass
 
@@ -98,6 +106,7 @@ def updateEvent(ID, name, date, time, msg, repeat, mode):
     pass
 
 
+# Do i even need this?
 def getEvent(ID):
     eventData = c.execute("SELECT * FROM event WHERE (:ID) == EventID", {"ID": ID}).fetchone()
     channelID = c.execute("SELECT ChannelID FROM config WHERE (:ID) == ConfigID", {"ID": eventData[1]}).fetchone()
