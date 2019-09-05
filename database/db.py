@@ -11,7 +11,7 @@ c = conn.cursor()
 # c.execute("insert into config(ChannelID, Reminder, TimeZone) values (123132, 20, 'UTC')")
 # conn.commit()
 #
-# print(c.execute("SELECT * FROM config WHERE ConfigID == 10").fetchone())
+# print(c.execute("SELECT * FROM config WHERE ConfigID == 1").fetchone())
 
 
 def addConfig(channelID, reminder, timeZone):
@@ -126,7 +126,7 @@ def getEvent(ID):
 #            Repeat TEXT,
 #            Message TEXT,
 #            FOREIGN KEY(ConfigID) REFERENCES config(ConfigID))""")
-
+#
 # c.execute("""CREATE TABLE event (
 #            EventID INTEGER PRIMARY KEY AUTOINCREMENT,
 #            ConfigID INTEGER,

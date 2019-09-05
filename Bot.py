@@ -61,15 +61,15 @@ def set_spam_status(boolean):
     spamBool = boolean
 
 
-@bot.command(name="spamChat",
-             brief="rn just spams chat every 30s",
-             description="proof of concept, completely useless currently")
-async def spam_chat(ctx):
-    while get_spam_status():
-        time = datetime.today()
-        if time.second % 5 == 0:
-            await ctx.send("@Konulv#5775")
-        await asyncio.sleep(1)
+# @bot.command(name="spamChat",
+#              brief="rn just spams chat every 30s",
+#              description="proof of concept, completely useless currently")
+# async def spam_chat(ctx):
+#     while get_spam_status():
+#         time = datetime.today()
+#         if time.second % 5 == 0:
+#             await ctx.send("@Konulv#5775")
+#         await asyncio.sleep(1)
 
 
 @bot.event
